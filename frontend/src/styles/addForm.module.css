@@ -1,0 +1,167 @@
+.formContainer {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+    text-align: center;
+}
+
+.productNameLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.productNameInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.priceLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.priceInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.descriptionLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.descriptionTextarea {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.materialLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.materialInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.discountLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.discountInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.brandLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.brandInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.stockLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.stockInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.imageUrlLabel {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.imageUrlInput {
+    width: 96%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.submitButton {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.submitButton:hover {
+    background-color: #45a049;
+}
+
+.message {
+    margin-top: 20px;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+    font-size: 16px;
+    opacity: 0;
+    animation: fadeIn 3s forwards;
+}
+
+.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error {
+    background-color: #f44336;
+    color: white;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

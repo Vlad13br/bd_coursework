@@ -1,0 +1,250 @@
+/* Watcher page styles */
+.watcher-page-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f4f4f9;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.watcher-info-box {
+    border: 2px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    margin-bottom: 40px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    transform: translateY(-20px);
+    opacity: 0;
+    animation: slideInUp 0.5s forwards;
+}
+
+.watcher-info-box h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.watcher-info-box p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.watcher-info-box .price {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-top: 15px;
+}
+
+.watcher-info-box .original-price {
+    text-decoration: line-through;
+    margin-right: 10px;
+    color: #888;
+}
+
+.watcher-info-box .discounted-price {
+    font-size: 1.5rem;
+    color: #d9534f;
+}
+
+.watcher-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 20px;
+    border-radius: 8px;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.25s forwards;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #5bc0de;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.5s forwards;
+}
+
+button:hover {
+    background-color: #31b0d5;
+    transform: scale(1.05);
+}
+
+.delete-button {
+    background-color: #d9534f;
+}
+
+.delete-button:hover {
+    background-color: #c9302c;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.75s forwards;
+}
+
+.edit-form input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.edit-form input:focus {
+    outline: none;
+    border-color: #5bc0de;
+}
+
+.update-discount-form {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+
+.update-discount-form input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px;
+}
+
+.update-discount-form button {
+    padding: 10px 15px;
+    background-color: #5bc0de;
+}
+
+.update-discount-form button:hover {
+    background-color: #31b0d5;
+}
+
+.reviews-section {
+    margin-top: 40px;
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+    opacity: 0;
+    animation: fadeIn 0.5s 1s forwards;
+}
+
+.reviews-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.reviews-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.review-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.review-card p {
+    margin: 5px 0;
+}
+
+.review-card strong {
+    color: #333;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.review-date-rating {
+    font-size: 1rem;
+    color: #666;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    10% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+}
+
+.add-to-cart-button {
+    background-color: #ff7a00;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.add-to-cart-button:hover {
+    transform: scale(1.1);
+}
+
+.cart-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #4caf50;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    animation: fadeInOut 1s ease-in-out forwards;
+    z-index: 1000;
+}

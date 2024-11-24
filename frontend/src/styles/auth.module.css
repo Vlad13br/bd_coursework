@@ -1,0 +1,103 @@
+/* auth.module.css */
+.section {
+    margin: 2rem auto;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.h1 {
+    text-align: center;
+    color: #333;
+    animation: slideIn 0.8s ease-out forwards;
+}
+
+.input {
+    width: 96%;
+    padding: 0.5rem;
+    margin: 1rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    opacity: 0;
+    animation: fadeIn 1s 0.5s forwards;
+}
+
+.button {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    opacity: 0;
+    animation: fadeIn 1s 1s forwards;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.errmsg {
+    color: red;
+    font-size: 0.875rem;
+}
+
+.offscreen {
+    display: none;
+}
+
+.valid {
+    color: green;
+}
+
+.invalid {
+    color: red;
+}
+
+.hide {
+    display: none;
+}
+
+.instructions {
+    font-size: 0.875rem;
+    color: #555;
+}
+
+.line {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.line:hover {
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

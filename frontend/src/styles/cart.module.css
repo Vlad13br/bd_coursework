@@ -1,0 +1,118 @@
+/* Cart styles with animation */
+.cartContainer {
+    position: fixed;
+    top: 15%;
+    right: 20px;
+    width: 300px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 15px;
+    z-index: 1000;
+    opacity: 0;
+    animation: slideInFromRight 0.5s forwards;
+}
+
+.cartTitle {
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 1.5rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.cartList {
+    list-style: none;
+    padding: 0;
+}
+
+.cartItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    opacity: 0;
+    animation: fadeInUp 0.3s ease-in-out forwards;
+}
+
+.cartItemImage {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+.cartItemDetails {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.removeBtn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    width: 110px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.5s forwards;
+}
+
+.removeBtn:hover {
+    background-color: #cc0000;
+}
+
+.orderBtn {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.orderBtn:hover {
+    background-color: #45a049;
+}
+
+.message {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #333;
+    opacity: 0;
+    animation: fadeIn 0.5s 1s forwards;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

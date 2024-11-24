@@ -1,0 +1,238 @@
+/* Основні стилі для контейнера */
+.profile-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #f9f9f9;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.profile-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.user-info {
+    flex: 1 1 60%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-in-out forwards;
+}
+
+.user-info h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.user-info p {
+    font-size: 16px;
+    margin: 5px 0;
+    color: #666;
+}
+
+.user-info strong {
+    color: #333;
+}
+
+.user-info button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 0.5s 0.5s forwards;
+}
+
+.user-info button:hover {
+    background-color: #0056b3;
+}
+
+.user-info form {
+    display: grid;
+    gap: 15px;
+}
+
+.user-info form label {
+    font-size: 16px;
+    color: #333;
+}
+
+.user-info form input {
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.user-info form button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.user-info form button:hover {
+    background-color: #218838;
+}
+
+.user-info form button[type="button"] {
+    background-color: #dc3545;
+}
+
+.user-info form button[type="button"]:hover {
+    background-color: #c82333;
+}
+
+.user-orders {
+    flex: 1 1 35%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeInUp 0.7s ease-in-out forwards;
+}
+
+.user-orders h2 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.order-card {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeInUp 0.7s ease-in-out forwards;
+}
+
+.order-card h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.order-card p {
+    font-size: 16px;
+    color: #666;
+}
+
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.order-item {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.order-item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.order-item p {
+    font-size: 14px;
+    color: #333;
+}
+
+.order-item strong {
+    font-weight: bold;
+}
+
+.order-card p strong {
+    font-size: 18px;
+    color: #333;
+}
+
+.cart-container {
+    flex: 1 1 100%;
+    margin-top: 40px;
+    opacity: 0;
+    animation: fadeInUp 0.9s ease-in-out forwards;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    opacity: 0;
+    animation: fadeInLeft 0.5s ease-in-out forwards;
+}
+
+.cart-item img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.cart-item p {
+    font-size: 16px;
+    color: #333;
+}
+
+.cart-item strong {
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

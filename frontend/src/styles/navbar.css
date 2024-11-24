@@ -1,0 +1,98 @@
+/* Global styles with animation */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+nav {
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+}
+
+.navbar {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    background-color: grey;
+    padding: 10px;
+    list-style-type: none;
+    font-family: Arial, sans-serif;
+    flex-wrap: wrap;
+    transform: translateY(-20px);
+    animation: slideInUp 1s forwards;
+}
+
+.navbar li {
+    margin: 0 10px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 1s 2s forwards;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar button {
+    color: white;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.navbar button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.navbar li:last-child {
+    margin-left: auto;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+    }
+
+    .navbar li {
+        margin: 5px 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

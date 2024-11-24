@@ -1,0 +1,51 @@
+.scrollable-table {
+    max-height: 400px;
+    margin-left: 20px;
+    margin-right: 20px;
+    overflow-y: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: lightgray;
+}
+
+button {
+    padding: 5px 10px;
+    margin: 5px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+.centered{
+    text-align: center;
+}
+.link{
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin: 5px;
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+.delete{
+    background: red;
+}
