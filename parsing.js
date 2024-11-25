@@ -20,17 +20,17 @@ async function fetchImages() {
             const imgUrls = [];
             imgElements.forEach((img) => {
                 if (img.src) {
-                    imgUrls.push(img.src); // Додаємо src зображення
+                    imgUrls.push(img.src);
                 }
             });
-            return imgUrls.slice(2, 12); // Беремо перші 10 зображень
+            return imgUrls // перші 10 зображень slice(2, 12);
         });
 
-        console.log('Знайдені зображення:', images); // Виводимо результат
+        console.log('Знайдені зображення:', images);
     } catch (error) {
         console.error('Error fetching images:', error);
     } finally {
-        await browser.close(); // Закриваємо браузер
+        await browser.close();
     }
 }
 

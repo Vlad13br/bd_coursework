@@ -170,7 +170,7 @@ const HomePage = () => {
                                             <p className="price">Ціна: {price} грн</p>
                                         )}
                                         <p className="description">{watch.description}</p>
-                                        {watch.rating && (
+                                        {watch.rating_count >0 && (
                                             <div className="rating">
                                                 <span>Рейтинг: {watch.rating} зірок</span>
                                             </div>
