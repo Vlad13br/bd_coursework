@@ -48,11 +48,12 @@ class WatcherController {
 
     async getAllWatchers(req, res) {
         try {
-            const {sort, minPrice, maxPrice, rating, discounted} = req.query;
+            const { sort, minPrice, maxPrice, rating, discounted, page = 1, limit = 10 } = req.query;
 
             let query = `SELECT * FROM watchers WHERE 1=1`;
             const params = [];
 
+            // Фільтри
             if (minPrice) {
                 query += ` AND price >= $${params.length + 1}`;
                 params.push(parseFloat(minPrice));
@@ -71,25 +72,42 @@ class WatcherController {
                 query += ` AND discount > 0`;
             }
 
+            // Сортування
             if (sort) {
                 if (sort === "price_asc") {
-                    query += ` ORDER BY price ASC`;
+                    query += ` ORDER BY (price * (1 - COALESCE(discount, 0) / 100)) ASC`;
                 } else if (sort === "price_desc") {
-                    query += ` ORDER BY price DESC`;
+                    query += ` ORDER BY (price * (1 - COALESCE(discount, 0) / 100)) DESC`;
                 } else if (sort === "rating") {
                     query += ` ORDER BY rating DESC NULLS LAST, rating_count DESC`;
                 }
             }
 
+            // Пагінація
+            const offset = (page - 1) * limit;
+            query += ` LIMIT $${params.length + 1} OFFSET $${params.length + 2}`;
+            params.push(parseInt(limit), parseInt(offset));
+
             const result = await pool.query(query, params);
+
+            // Отримати загальну кількість товарів для обчислення кількості сторінок
+            const countResult = await pool.query(`SELECT COUNT(*) FROM watchers WHERE 1=1`);
+            const totalItems = parseInt(countResult.rows[0].count);
+            const totalPages = Math.ceil(totalItems / limit);
 
             res.status(200).json({
                 message: "Watchers retrieved successfully",
                 data: result.rows,
+                pagination: {
+                    totalItems,
+                    totalPages,
+                    currentPage: parseInt(page),
+                    limit: parseInt(limit),
+                },
             });
         } catch (error) {
             console.error(error);
-            res.status(500).json({error: "Server error"});
+            res.status(500).json({ error: "Server error" });
         }
     }
 

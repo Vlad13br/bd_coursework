@@ -7,6 +7,8 @@ const HomePage = () => {
     const [watches, setWatches] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     const [filters, setFilters] = useState({
         sort: 'rating',
@@ -37,11 +39,12 @@ const HomePage = () => {
         setLoading(true);
         try {
             const response = await axios.get('http://localhost:3001/api/watchers', {
-                params: filters,
+                params: { ...filters, page: currentPage, limit: 10 },
             });
 
             if (Array.isArray(response.data.data)) {
                 setWatches(response.data.data);
+                setTotalPages(response.data.pagination.totalPages);
             } else {
                 setError(`Невірний формат даних: ${JSON.stringify(response.data)}`);
             }
@@ -54,7 +57,7 @@ const HomePage = () => {
 
     useEffect(() => {
         fetchWatches();
-    }, [filters]);
+    }, [filters, currentPage]);
 
     const handlePendingFilterChange = (key, value) => {
         setPendingFilters((prev) => {
@@ -85,6 +88,9 @@ const HomePage = () => {
         fetchWatches();
     };
 
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
 
     if (loading) {
         return <p>Завантаження годинників...</p>;
@@ -155,7 +161,8 @@ const HomePage = () => {
                             const finalPrice = price * (1 - discount / 100);
 
                             return (
-                                <Link key={watch.watcher_id} to={`/watchers/${watch.watcher_id}`} className="album-card">
+                                <Link key={watch.watcher_id} to={`/watchers/${watch.watcher_id}`}
+                                      className="album-card">
                                     <h2>{watch.product_name}</h2>
                                     <img
                                         src={watch.image_url}
@@ -164,13 +171,14 @@ const HomePage = () => {
                                     <div className="price-info">
                                         {discount > 0 ? (
                                             <p className="discounted-price">
-                                                Ціна: <span className="original-price">{price} грн</span> {finalPrice.toFixed(2)} грн
+                                                Ціна: <span
+                                                className="original-price">{price} грн</span> {finalPrice.toFixed(2)} грн
                                             </p>
                                         ) : (
                                             <p className="price">Ціна: {price} грн</p>
                                         )}
                                         <p className="description">{watch.description}</p>
-                                        {watch.rating_count >0 && (
+                                        {watch.rating_count > 0 && (
                                             <div className="rating">
                                                 <span>Рейтинг: {watch.rating} зірок</span>
                                             </div>
@@ -181,6 +189,18 @@ const HomePage = () => {
                         })}
                     </div>
                 )}
+                <div className="pagination">
+                    {Array.from({length: totalPages}, (_, index) => (
+                        <button
+                            key={index + 1}
+                            onClick={() => handlePageChange(index + 1)}
+                            disabled={currentPage === index + 1}
+                            className={`page-button ${currentPage === index + 1 ? 'active' : ''}`}
+                        >
+                            {index + 1}
+                        </button>
+                    ))}
+                </div>
             </main>
         </div>
     );
