@@ -47,7 +47,6 @@ class StatsController {
         }
     }
 
-
     async getTopSellingProducts(req, res) {
         try {
             const { id } = req.params;

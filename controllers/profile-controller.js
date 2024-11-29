@@ -105,19 +105,30 @@ class UserController {
     try {
       const { id } = req.params;
       const { items, payment_method } = req.body;
-console.log(items);
+
       const orderResult = await pool.query(
           `INSERT INTO orders (user_id, payment_method) VALUES ($1, $2) RETURNING order_id`,
           [id, payment_method]
       );
       const orderId = orderResult.rows[0].order_id;
 
-      const orderItemsQueries = items.map((item) =>
+      const groupedItems = items.reduce((acc, item) => {
+        const existingItem = acc.find(i => i.watcher_id === item.watcher_id);
+        if (existingItem) {
+          existingItem.quantity += item.quantity;
+        } else {
+          acc.push({ ...item });
+        }
+        return acc;
+      }, []);
+
+      const orderItemsQueries = groupedItems.map((item) =>
           pool.query(
               `INSERT INTO order_items (order_id, watcher_id, quantity, price) VALUES ($1, $2, $3, $4)`,
               [orderId, item.watcher_id, item.quantity, item.price]
           )
       );
+
       await Promise.all(orderItemsQueries);
 
       res.status(201).json({ message: "Order created successfully" });

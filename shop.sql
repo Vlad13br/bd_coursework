@@ -54,33 +54,40 @@ CREATE OR REPLACE FUNCTION update_watcher_rating()
 RETURNS TRIGGER AS $$
 BEGIN
   UPDATE watchers
-  SET 
+  SET
+    -- Оновлюємо рейтинг, використовуючи середнє значення з таблиці reviews
+    -- Якщо середнє значення нема, ставимо 0 за допомогою COALESCE.
     rating = COALESCE((
       SELECT ROUND(AVG(r.rating), 2)
       FROM reviews r
       JOIN order_items oi ON r.order_item_id = oi.order_item_id
-      WHERE oi.watcher_id = (
+      WHERE oi.watcher_id = (  -- Отримуємо watcher_id для відповідного order_item_id
         SELECT watcher_id
         FROM order_items
-        WHERE order_item_id = NEW.order_item_id
+        WHERE order_item_id = NEW.order_item_id  -- Визначаємо watcher_id для поточного запису
       )
     ), 0),
+
+    -- Оновлюємо кількість відгуків для спостерігача , якщо їх немає ставимо 0
     rating_count = COALESCE((
       SELECT COUNT(r.rating)
       FROM reviews r
       JOIN order_items oi ON r.order_item_id = oi.order_item_id
-      WHERE oi.watcher_id = (
+      WHERE oi.watcher_id = (  -- Отримуємо watcher_id для відповідного order_item_id
         SELECT watcher_id
         FROM order_items
-        WHERE order_item_id = NEW.order_item_id
+        WHERE order_item_id = NEW.order_item_id  -- Визначаємо watcher_id для поточного запису
       )
     ), 0)
+
+  -- Оновлюємо записи в таблиці watchers для правильного watcher_id
   WHERE watcher_id = (
     SELECT watcher_id
     FROM order_items
-    WHERE order_item_id = NEW.order_item_id
+    WHERE order_item_id = NEW.order_item_id  -- Використовуємо order_item_id, який міститься у NEW
   );
 
+  -- Повертаємо новий запис після виконання оновлення
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -94,6 +101,24 @@ CREATE TRIGGER after_review_update
 AFTER UPDATE ON reviews
 FOR EACH ROW
 EXECUTE FUNCTION update_watcher_rating();
+
+CREATE TRIGGER trg_CheckEmailBeforeInsert
+ON users
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM users WHERE email = (SELECT email FROM inserted))
+    BEGIN
+        PRINT 'Email вже існує в базі даних. Вставка скасована.'
+    END
+    ELSE
+    BEGIN
+        INSERT INTO users (user_id, username, email, address, phone, password, role, created_at, updated_at)
+        SELECT user_id, username, email, address, phone, password, role, created_at, updated_at
+        FROM inserted;
+    END
+END;
+
 
 INSERT INTO users (name, surname, email, address, phone, password, role)
 VALUES

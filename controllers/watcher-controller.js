@@ -52,24 +52,31 @@ class WatcherController {
 
             let query = `SELECT * FROM watchers WHERE 1=1`;
             const params = [];
+            let countQuery = `SELECT COUNT(*) FROM watchers WHERE 1=1`;
+            const countParams = [];
 
             // Фільтри
             if (minPrice) {
                 query += ` AND price >= $${params.length + 1}`;
                 params.push(parseFloat(minPrice));
+                countQuery += ` AND price >= $${countParams.length + 1}`;
+                countParams.push(parseFloat(minPrice));
             }
             if (maxPrice) {
                 query += ` AND price <= $${params.length + 1}`;
                 params.push(parseFloat(maxPrice));
+                countQuery += ` AND price <= $${countParams.length + 1}`;
+                countParams.push(parseFloat(maxPrice));
             }
-
             if (rating) {
                 query += ` AND rating >= $${params.length + 1}`;
                 params.push(parseFloat(rating));
+                countQuery += ` AND rating >= $${countParams.length + 1}`;
+                countParams.push(parseFloat(rating));
             }
-
             if (discounted === "true") {
                 query += ` AND discount > 0`;
+                countQuery += ` AND discount > 0`;
             }
 
             // Сортування
@@ -90,8 +97,7 @@ class WatcherController {
 
             const result = await pool.query(query, params);
 
-            // Отримати загальну кількість товарів для обчислення кількості сторінок
-            const countResult = await pool.query(`SELECT COUNT(*) FROM watchers WHERE 1=1`);
+            const countResult = await pool.query(countQuery, countParams);
             const totalItems = parseInt(countResult.rows[0].count);
             const totalPages = Math.ceil(totalItems / limit);
 
