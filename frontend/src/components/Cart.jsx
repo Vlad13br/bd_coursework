@@ -12,15 +12,35 @@ const Cart = () => {
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
         if (Array.isArray(storedCart) && storedCart.every(item => item.name && item.price && item.watcher_id)) {
-            setCartItems(storedCart);
+            // Групуємо товари за watcher_id
+            const groupedItems = storedCart.reduce((acc, item) => {
+                const existingItem = acc.find(i => i.watcher_id === item.watcher_id);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity;
+                } else {
+                    acc.push(item);
+                }
+                return acc;
+            }, []);
+            setCartItems(groupedItems);
         } else {
             setCartItems([]);
             localStorage.removeItem("cart");
         }
     }, []);
 
-    const removeFromCart = (index) => {
-        const updatedCart = cartItems.filter((_, i) => i !== index);
+    // Оновлення кількості товару
+    const updateQuantity = (watcher_id, newQuantity) => {
+        if (newQuantity < 1) return; // Перевірка на мінімальну кількість
+        const updatedCart = cartItems.map(item =>
+            item.watcher_id === watcher_id ? { ...item, quantity: newQuantity } : item
+        );
+        setCartItems(updatedCart);
+        localStorage.setItem("cart", JSON.stringify(updatedCart));
+    };
+
+    const removeFromCart = (watcher_id) => {
+        const updatedCart = cartItems.filter(item => item.watcher_id !== watcher_id);
         setCartItems(updatedCart);
         localStorage.setItem("cart", JSON.stringify(updatedCart));
     };
@@ -76,10 +96,33 @@ const Cart = () => {
                             <div className={styles.cartItemDetails}>
                                 <p>{item.name}</p>
                                 <p>{item.price.toFixed(2)} грн</p>
+                                <div className={styles.quantityControl}>
+                                    <button
+                                        className={styles.quantityBtn}
+                                        onClick={() => updateQuantity(item.watcher_id, item.quantity - 1)}
+                                    >
+                                        -
+                                    </button>
+                                    <input
+                                        type="number"
+                                        value={item.quantity}
+                                        onChange={(e) =>
+                                            updateQuantity(item.watcher_id, parseInt(e.target.value) || 1)
+                                        }
+                                        min="1"
+                                        className={styles.quantityInput}
+                                    />
+                                    <button
+                                        className={styles.quantityBtn}
+                                        onClick={() => updateQuantity(item.watcher_id, item.quantity + 1)}
+                                    >
+                                        +
+                                    </button>
+                                </div>
                             </div>
                             <button
                                 className={styles.removeBtn}
-                                onClick={() => removeFromCart(index)}
+                                onClick={() => removeFromCart(item.watcher_id)}
                             >
                                 Видалити
                             </button>

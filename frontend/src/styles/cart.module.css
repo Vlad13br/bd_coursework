@@ -116,3 +116,21 @@
         transform: translateY(0);
     }
 }
+.quantityControl {
+    display: flex;
+    align-items: center;
+}
+
+.quantityBtn {
+    background-color: #ff7a00;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.quantityInput {
+    width: 40px;
+    text-align: center;
+    border: 1px solid #ccc;
+    margin: 0 10px;
+}

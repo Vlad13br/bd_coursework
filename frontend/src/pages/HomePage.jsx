@@ -21,7 +21,7 @@ const HomePage = () => {
     const [pendingFilters, setPendingFilters] = useState(filters);
 
     useEffect(() => {
-        const savedFilters = localStorage.getItem('filters');
+        const savedFilters = sessionStorage.getItem('filters');
         if (savedFilters) {
             const parsedFilters = JSON.parse(savedFilters);
             setFilters({
@@ -62,7 +62,7 @@ const HomePage = () => {
     const handlePendingFilterChange = (key, value) => {
         setPendingFilters((prev) => {
             const updatedFilters = { ...prev, [key]: value };
-            localStorage.setItem('filters', JSON.stringify(updatedFilters));
+            sessionStorage.setItem('filters', JSON.stringify(updatedFilters));
             return updatedFilters;
         });
     };
@@ -83,7 +83,7 @@ const HomePage = () => {
         setPendingFilters(initialFilters);
         setFilters(initialFilters);
 
-        localStorage.removeItem('filters');
+        sessionStorage.removeItem('filters');
 
         fetchWatches();
     };
