@@ -21,4 +21,6 @@ router.patch(
   WatcherController.updateDiscount
 );
 
+router.delete('/watchers/:id', isAdmin, WatcherController.deleteWatcher);
+
 module.exports = router;

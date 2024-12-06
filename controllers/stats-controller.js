@@ -4,8 +4,8 @@ class StatsController {
     async getAllUsers(req, res) {
         try {
             const { id } = req.params;
-            const query = 'select user_id, name,surname,email,phone from users;';
-            const result = await pool.query(query);
+            const query = 'SELECT user_id, name, surname, email, phone FROM users WHERE role != $1;';
+            const result = await pool.query(query, ['admin']);
             res.status(200).json({ users: result.rows });
         } catch (error) {
             console.error(error);
@@ -17,10 +17,11 @@ class StatsController {
         try {
             const { id } = req.params;
             const query = `
-      select user_id, name,surname,email,phone from users
-      WHERE created_at > NOW() - INTERVAL '1 month';
-    `;
-            const result = await pool.query(query);
+            SELECT user_id, name, surname, email, phone
+            FROM users
+            WHERE created_at > NOW() - INTERVAL '1 month' AND role != $1;
+        `;
+            const result = await pool.query(query, ['admin']);
             res.status(200).json({ users: result.rows });
         } catch (error) {
             console.error(error);
@@ -121,7 +122,7 @@ class StatsController {
             FROM orders o
             JOIN users u ON o.user_id = u.user_id
             JOIN order_items oi ON o.order_id = oi.order_id
-            WHERE o.shipping_status != 'delivered'
+            WHERE o.shipping_status != 'completed'
             GROUP BY o.order_id, u.name, u.surname, o.order_start, o.order_end, o.shipping_status
         `;
             const result = await pool.query(query);

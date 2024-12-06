@@ -158,3 +158,46 @@ INSERT INTO watchers (product_name, price, description, material, rating, rating
 ('Big Bold Chrono', 4409.99, 'Великий годинник із хронографом', 'Нержавіюча сталь', 0, 0, 0, 'Swatch', 7, 'https://swatch.ua/media/menu/Big-Bold_Chrono_desktop_3.jpg'),
 ('Irony Medium', 3209.99, 'Елегантний годинник середнього розміру', 'Алюміній', 0, 0, 0, 'Swatch', 10, 'https://swatch.ua/media/menu/irony_medium_SS20.jpg'),
 ('Irony Lady', 3109.99, 'Вишуканий жіночий годинник', 'Алюміній', 0, 0, 0, 'Swatch', 18, 'https://swatch.ua/media/menu/irony_lady-FW18_4.jpg');
+
+
+select * from reviews;
+
+DO $$
+DECLARE
+    v_watcher_id INT;
+    v_user_id INT;
+    v_order_id INT;
+    v_order_item_id INT;
+    v_rating NUMERIC;
+BEGIN
+    -- Ітерація по годинниках
+    FOR v_watcher_id IN 22..51 LOOP
+        -- Ітерація по користувачах
+        FOR v_user_id IN 7..16 LOOP
+            -- Створення замовлення для користувача
+            INSERT INTO orders (user_id, payment_method, shipping_status)
+            VALUES (v_user_id, 'credit_card', 'completed')
+            RETURNING order_id INTO v_order_id;
+
+            -- Додавання товару до замовлення
+            INSERT INTO order_items (order_id, quantity, price, watcher_id)
+            VALUES (v_order_id, 1, (SELECT price FROM watchers WHERE watcher_id = v_watcher_id), v_watcher_id)
+            RETURNING order_item_id INTO v_order_item_id;
+
+            -- Генерація рейтингу (1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5)
+            -- Вибір випадкового рейтингу з можливих значень
+            v_rating := (ARRAY[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])[FLOOR(1 + random() * 9)::INT];
+
+            -- Додавання відгуку
+            INSERT INTO reviews (rating, review_text, order_item_id)
+            VALUES (
+                v_rating,  -- Випадковий рейтинг
+                'This is a review for watcher ' || v_watcher_id || ' by user ' || v_user_id || '.', -- Текст відгуку
+                v_order_item_id
+            );
+        END LOOP;
+    END LOOP;
+END $$;
+
+
+TRUNCATE TABLE reviews, order_items, orders RESTART IDENTITY CASCADE;

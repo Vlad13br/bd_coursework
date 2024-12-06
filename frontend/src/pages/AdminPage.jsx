@@ -14,7 +14,7 @@ const AdminPage = () => {
     const [uncompletedOrders, setUncompletedOrders] = useState([]);
 
     const [activeTable, setActiveTable] = useState(null);
-    const validStatuses = ['pending', 'shipped', 'delivered', 'cancelled'];
+    const validStatuses = ['pending', 'shipped', 'completed', 'cancelled'];
     const [sortConfig, setSortConfig] = useState({ key: '', direction: 'asc' });
 
     const fetchUsers = async () => {
@@ -124,14 +124,35 @@ const AdminPage = () => {
         const { key, direction } = sortConfig;
         if (!key) return data;
 
-        const sortedData = [...data].sort((a, b) => {
-            const aValue = key === 'total_revenue' ? parseFloat(a[key]) : a[key];
-            const bValue = key === 'total_revenue' ? parseFloat(b[key]) : b[key];
+        const sortedData = [...data];
 
-            if (aValue < bValue) return direction === 'asc' ? -1 : 1;
-            if (aValue > bValue) return direction === 'asc' ? 1 : -1;
+        sortedData.sort((a, b) => {
+            let aValue, bValue;
+
+            if (key === 'total_revenue') {
+                aValue = parseFloat(a[key]);
+                bValue = parseFloat(b[key]);
+            } else {
+                aValue = a[key];
+                bValue = b[key];
+            }
+
+            if (aValue < bValue) {
+                if (direction === 'asc') {
+                    return -1; // зростання a перед b
+                } else {
+                    return 1; // спадання b перед a
+                }
+            } else if (aValue > bValue) {
+                if (direction === 'asc') {
+                    return 1; // зростання b перед а
+                } else {
+                    return -1; // спадання a перед b
+                }
+            }
             return 0;
         });
+
         return sortedData;
     };
 
@@ -228,7 +249,7 @@ const AdminPage = () => {
                                 <td>{user.surname}</td>
                                 <td>{user.email}</td>
                                 <td>{user.phone}</td>
-                                <td>${user.total_spent}</td>
+                                <td>{user.total_spent}</td>
                             </tr>
                         ))}
                         </tbody>

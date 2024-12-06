@@ -236,6 +236,27 @@ class WatcherController {
         }
     }
 
+    async deleteWatcher(req, res) {
+        try {
+            const { id } = req.params;
+
+            const query = `DELETE FROM watchers WHERE watcher_id = $1 RETURNING *;`;
+            const result = await pool.query(query, [id]);
+
+            if (result.rowCount === 0) {
+                return res.status(404).json({ error: "Watcher not found" });
+            }
+
+            res.status(200).json({
+                message: "Watcher deleted successfully",
+                data: result.rows[0],
+            });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Server error" });
+        }
+    }
+
 }
 
 module.exports = new WatcherController();

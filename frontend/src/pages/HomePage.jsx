@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState, useMemo, useCallback} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import '../styles/homePage.css'
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import '../styles/homePage.css';
 
 const HomePage = () => {
     const [watches, setWatches] = useState([]);
@@ -18,9 +18,22 @@ const HomePage = () => {
         discounted: false,
     });
 
+    const queryParams = useMemo(() => ({
+        ...filters,
+        page: currentPage
+    }), [filters, currentPage]);
+
     const [pendingFilters, setPendingFilters] = useState(filters);
 
+    const navigate = useNavigate();
+    const location = useLocation();
+
     useEffect(() => {
+        const searchParams = new URLSearchParams(location.search);
+        const pageFromUrl = parseInt(searchParams.get('page')) || 1;
+
+        setCurrentPage(pageFromUrl);
+
         const savedFilters = sessionStorage.getItem('filters');
         if (savedFilters) {
             const parsedFilters = JSON.parse(savedFilters);
@@ -33,18 +46,37 @@ const HomePage = () => {
                 sort: parsedFilters.sort || 'rating',
             });
         }
-    }, []);
+    }, [location.search]);
+
+    useEffect(() => {
+        fetchWatches();
+    }, [queryParams]);
 
     const fetchWatches = async () => {
         setLoading(true);
+        const cacheKey = JSON.stringify(filters) + currentPage;
+        const cachedData = sessionStorage.getItem(cacheKey);
+
+        if (cachedData) {
+            const { watches, totalPages } = JSON.parse(cachedData);
+            setWatches(watches);
+            setTotalPages(totalPages);
+            setLoading(false);
+            return;
+        }
+
         try {
             const response = await axios.get('http://localhost:3001/api/watchers', {
-                params: { ...filters, page: currentPage, limit: 10 },
+                params: { ...filters, page: currentPage },
             });
 
             if (Array.isArray(response.data.data)) {
                 setWatches(response.data.data);
                 setTotalPages(response.data.pagination.totalPages);
+                sessionStorage.setItem(cacheKey, JSON.stringify({
+                    watches: response.data.data,
+                    totalPages: response.data.pagination.totalPages,
+                }));
             } else {
                 setError(`Невірний формат даних: ${JSON.stringify(response.data)}`);
             }
@@ -55,21 +87,21 @@ const HomePage = () => {
         }
     };
 
-    useEffect(() => {
-        fetchWatches();
-    }, [filters, currentPage]);
-
-    const handlePendingFilterChange = (key, value) => {
+    const handlePendingFilterChange = useCallback((key, value) => {
         setPendingFilters((prev) => {
             const updatedFilters = { ...prev, [key]: value };
             sessionStorage.setItem('filters', JSON.stringify(updatedFilters));
             return updatedFilters;
         });
-    };
+    }, []);
 
-    const applyFilters = () => {
+    const applyFilters = useCallback(() => {
         setFilters(pendingFilters);
-    };
+        sessionStorage.setItem('filters', JSON.stringify(pendingFilters));
+        const searchParams = new URLSearchParams();
+        searchParams.set('page', 1);
+        navigate(`?${searchParams.toString()}`);
+    }, [pendingFilters, navigate]);
 
     const resetFilters = () => {
         const initialFilters = {
@@ -88,9 +120,12 @@ const HomePage = () => {
         fetchWatches();
     };
 
-    const handlePageChange = (page) => {
+    const handlePageChange = useCallback((page) => {
         setCurrentPage(page);
-    };
+        const searchParams = new URLSearchParams(location.search);
+        searchParams.set('page', page);
+        navigate(`?${searchParams.toString()}`);
+    }, [location.search, navigate]);
 
     if (loading) {
         return <p>Завантаження годинників...</p>;
@@ -190,7 +225,7 @@ const HomePage = () => {
                     </div>
                 )}
                 <div className="pagination">
-                    {Array.from({length: totalPages}, (_, index) => (
+                    {Array.from({ length: totalPages }, (_, index) => (
                         <button
                             key={index + 1}
                             onClick={() => handlePageChange(index + 1)}

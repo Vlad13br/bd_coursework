@@ -38,6 +38,15 @@ const WatcherForm = () => {
             if (response.status === 201) {
                 setMessage('Годинник успішно створено!');
                 setIsSuccess(true);
+
+                setProductName('');
+                setPrice('');
+                setDescription('');
+                setMaterial('');
+                setDiscount('');
+                setBrand('');
+                setStock('');
+                setImageUrl('');
             } else {
                 setMessage('Сталася помилка при створенні.');
                 setIsSuccess(false);

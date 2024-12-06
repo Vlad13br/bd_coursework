@@ -113,8 +113,19 @@ const WatcherPage = () => {
         setTimeout(() => setIsAdded(false), 2000);
     };
 
+    const handleDeleteWatcher = async () => {
+        const confirmDelete = window.confirm("Ви впевнені, що хочете видалити цей товар?");
 
-
+        if (!confirmDelete) {
+            return;
+        }
+        try {
+            await axios.delete(`http://localhost:3001/api/watchers/${watcher_id}`, { withCredentials: true });
+            history("/");
+        } catch (err) {
+            setError('Не вдалося видалити товар');
+        }
+    };
 
     if (loading) {
         return <p>Завантаження...</p>;
@@ -257,12 +268,16 @@ const WatcherPage = () => {
                             />
                             <button type="submit">Оновити знижку</button>
                         </form>
+
+                        <button onClick={handleDeleteWatcher} className="delete-button">
+                            Видалити товар
+                        </button>
                     </>
                 )}
 
                 {auth?.email && auth?.role !== "admin" && (
                     <>
-                        <button onClick={handleAddToCart} className="add-to-cart-button">
+                    <button onClick={handleAddToCart} className="add-to-cart-button">
                             Додати в кошик
                         </button>
                     </>
