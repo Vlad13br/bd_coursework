@@ -151,19 +151,18 @@ const WatcherPage = () => {
                 <p><strong>Опис:</strong> {watcher.description}</p>
                 <p><strong>Бренд:</strong> {watcher.brand}</p>
                 <p><strong>Матеріал:</strong> {watcher.material}</p>
-                <p><strong>Колір:</strong> {watcher.color}</p>
                 <p><strong>Наявність на складі:</strong> {watcher.stock ? 'В наявності' : 'Немає на складі'}</p>
 
                 <div className="price-box">
                     {watcher.discount > 0 ? (
                         <>
                             <p className="price">
-                                <span className="original-price">{watcher.price} грн</span>
+                                <span className="original-price">Ціна: {watcher.price} грн</span>
                                 <span className="discounted-price">{discountedPrice.toFixed(2)} грн</span>
                             </p>
                         </>
                     ) : (
-                        <p className="price">{watcher.price} грн</p>
+                        <p className="price"> Ціна: {watcher.price} грн</p>
                     )}
                 </div>
 
