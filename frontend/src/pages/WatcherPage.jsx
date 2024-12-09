@@ -282,7 +282,7 @@ const WatcherPage = () => {
                         </button>
                     </>
                 )}
-                {isAdded && <div className="cart-notification">Товар додано в кошик!</div>}
+                {isAdded && <div className="cart-notification">Товар додано в кошик!(кошик в фрофілі)</div>}
             </div>
 
             <div className="reviews-section">

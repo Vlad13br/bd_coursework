@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../components/AuthProvider";
 import "../styles/navbar.css";
@@ -8,9 +8,6 @@ const Navbar = () => {
     const { auth, setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log("Current auth state:", auth);
-    }, [auth]);
 
     const handleLogout = async () => {
         try {

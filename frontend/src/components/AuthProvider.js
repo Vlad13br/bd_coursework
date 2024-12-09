@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }) => {
                 setAuth({});
             }
         } catch (err) {
-            console.error(err);
             setAuth({});
         }
     };
