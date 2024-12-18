@@ -74,7 +74,7 @@ const AdminPage = () => {
     const handleUpdateOrderStatus = async (orderId, newStatus) => {
         try {
             await axios.patch(`http://localhost:3001/api/orders/${auth.user_id}`, { order_id: orderId, new_status: newStatus },{withCredentials:true});
-            fetchUncompletedOrders();  // Після оновлення замовлення, повторно завантажуємо замовлення
+            fetchUncompletedOrders();
         } catch (error) {
             console.error("Error updating order status:", error);
         }

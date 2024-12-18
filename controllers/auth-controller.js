@@ -6,7 +6,6 @@ class AuthController {
     try {
       const { name, surname, email, password, address, phone } = req.body;
 
-      // Перевірка, чи вже існує користувач з таким email
       const result = await pool.query("SELECT * FROM users WHERE email = $1", [
         email,
       ]);
@@ -17,27 +16,14 @@ class AuthController {
 
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Створюємо нового користувача
       const newUser = await pool.query(
           `INSERT INTO users (name, surname, email, password, address, phone)
-         VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
           [name, surname, email, hashedPassword, address, phone]
       );
 
-      const user = newUser.rows[0];
+      res.json({ message: "Registration successful", user: newUser.rows[0] });
 
-      // Створюємо сесію для нового користувача, зберігаючи всю необхідну інформацію
-      req.session.user = {
-        user_id: user.user_id,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        address: user.address,
-        phone: user.phone,
-        role: user.role,
-      };
-
-      res.json({ message: "Registration successful", user: req.session.user });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Server error" });
@@ -79,7 +65,6 @@ class AuthController {
     }
   }
 
-  // Оновлений код для логауту
   async logout(req, res) {
     try {
       req.session.destroy((err) => {
@@ -87,8 +72,9 @@ class AuthController {
           return res.status(500).json({ error: "Failed to log out" });
         }
 
-        // Видаляємо cookie для сесії
-        res.clearCookie("connect.sid"); // замініть "connect.sid" на ім'я вашої cookie сесії
+        res.clearCookie("connect.sid");
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+        res.setHeader("Pragma", "no-cache");
 
         res.json({ message: "Logout successful" });
       });

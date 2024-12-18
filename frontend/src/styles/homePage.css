@@ -8,6 +8,8 @@ body {
 }
 .filters-panel {
     width: 250px;
+margin-top: 80px;
+    margin-bottom: 50px;
     padding: 20px;
     background-color: #f9f9f9;
     border: 1px solid #ddd;

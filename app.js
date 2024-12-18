@@ -22,11 +22,10 @@ app.use(
         saveUninitialized: true,
         cookie: {
             httpOnly: true,
-            maxAge: 2 * 60 * 60 * 1000, // 2 годинни
+            maxAge: 2 * 60 * 60 * 1000,
         },
     })
 );
-
 
 app.use(express.json());
 app.use("/api", router);

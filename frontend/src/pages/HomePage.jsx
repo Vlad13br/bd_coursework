@@ -54,17 +54,6 @@ const HomePage = () => {
 
     const fetchWatches = async () => {
         setLoading(true);
-        const cacheKey = JSON.stringify(filters) + currentPage;
-        const cachedData = sessionStorage.getItem(cacheKey);
-
-        if (cachedData) {
-            const { watches, totalPages } = JSON.parse(cachedData);
-            setWatches(watches);
-            setTotalPages(totalPages);
-            setLoading(false);
-            return;
-        }
-
         try {
             const response = await axios.get('http://localhost:3001/api/watchers', {
                 params: { ...filters, page: currentPage },
@@ -73,10 +62,6 @@ const HomePage = () => {
             if (Array.isArray(response.data.data)) {
                 setWatches(response.data.data);
                 setTotalPages(response.data.pagination.totalPages);
-                sessionStorage.setItem(cacheKey, JSON.stringify({
-                    watches: response.data.data,
-                    totalPages: response.data.pagination.totalPages,
-                }));
             } else {
                 setError(`Невірний формат даних: ${JSON.stringify(response.data)}`);
             }
@@ -88,20 +73,25 @@ const HomePage = () => {
     };
 
     const handlePendingFilterChange = useCallback((key, value) => {
-        setPendingFilters((prev) => {
-            const updatedFilters = { ...prev, [key]: value };
-            sessionStorage.setItem('filters', JSON.stringify(updatedFilters));
-            return updatedFilters;
-        });
+        setPendingFilters((prev) => ({
+            ...prev,
+            [key]: value,
+        }));
     }, []);
 
     const applyFilters = useCallback(() => {
-        setFilters(pendingFilters);
-        sessionStorage.setItem('filters', JSON.stringify(pendingFilters));
-        const searchParams = new URLSearchParams();
-        searchParams.set('page', 1);
-        navigate(`?${searchParams.toString()}`);
-    }, [pendingFilters, navigate]);
+        const filtersChanged = JSON.stringify(filters) !== JSON.stringify(pendingFilters);
+
+        if (filtersChanged) {
+            setFilters(pendingFilters);
+            sessionStorage.setItem('filters', JSON.stringify(pendingFilters));
+
+            const searchParams = new URLSearchParams();
+            searchParams.set('page', 1);
+            navigate(`?${searchParams.toString()}`);
+        }
+    }, [filters, pendingFilters, navigate]);
+
 
     const resetFilters = () => {
         const initialFilters = {
@@ -112,13 +102,18 @@ const HomePage = () => {
             discounted: false,
         };
 
-        setPendingFilters(initialFilters);
-        setFilters(initialFilters);
+        // Перевіряємо, чи поточні фільтри відрізняються від значень стандартних
+        const filtersChanged = JSON.stringify(filters) !== JSON.stringify(initialFilters);
 
-        sessionStorage.removeItem('filters');
+        if (filtersChanged) {
+            setPendingFilters(initialFilters);
+            setFilters(initialFilters);
 
-        fetchWatches();
+            sessionStorage.removeItem('filters');
+            fetchWatches();
+        }
     };
+
 
     const handlePageChange = useCallback((page) => {
         setCurrentPage(page);

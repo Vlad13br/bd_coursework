@@ -30,19 +30,16 @@ const Navbar = () => {
     return (
         <nav>
             <ul className="navbar">
-                {/* Головна сторінка */}
                 <li>
                     <Link to="/">Головна</Link>
                 </li>
 
-                {/* Якщо користувач не авторизований */}
                 {!auth?.email && (
                     <li>
                         <Link to="/login">Логін</Link>
                     </li>
                 )}
 
-                {/* Якщо користувач є адміністратором */}
                 {auth?.role === "admin" && (
                     <>
                         <li>
@@ -54,7 +51,6 @@ const Navbar = () => {
                     </>
                 )}
 
-                {/* Якщо користувач авторизований, але не адміністратор */}
                 {auth?.email && auth?.role !== "admin" && (
                     <>
                         <li>

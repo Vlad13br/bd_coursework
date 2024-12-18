@@ -37,6 +37,7 @@ class StatsController {
       FROM users u
       JOIN orders o ON u.user_id = o.user_id
       JOIN order_items oi ON o.order_id = oi.order_id
+      WHERE o.shipping_status = 'completed'
       GROUP BY u.user_id
       ORDER BY total_spent DESC
     `;
@@ -66,7 +67,6 @@ class StatsController {
         }
     }
 
-// Кількість товарів на складі
     async getProductStock(req, res) {
         try {
             const { id } = req.params;
@@ -79,7 +79,6 @@ class StatsController {
         }
     }
 
-// Зміна кількості товарів на складі
     async setProductStock(req, res) {
         try {
             const { id } = req.params;
@@ -112,7 +111,6 @@ class StatsController {
         }
     }
 
-    // Не завершені замовлення
     async getUncompletedOrders(req, res) {
         try {
             const { id } = req.params;
@@ -133,14 +131,12 @@ class StatsController {
         }
     }
 
-// Зміна статусу замовлення
     async updateOrderStatus(req, res) {
         try {
             const { id } = req.params;
             const { order_id, new_status } = req.body;
 
-            // Перевірка статусy
-            const validStatuses = ['pending', 'shipped', 'delivered', 'cancelled'];
+            const validStatuses = ['pending', 'shipped', 'completed', 'cancelled'];
             if (!validStatuses.includes(new_status)) {
                 return res.status(400).json({ error: 'Invalid status' });
             }

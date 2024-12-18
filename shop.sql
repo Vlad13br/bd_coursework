@@ -119,13 +119,62 @@ BEGIN
     END
 END;
 
+CREATE OR REPLACE FUNCTION update_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_update_users_timestamp
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+CREATE TRIGGER trg_update_watchers_timestamp
+BEFORE UPDATE ON watchers
+FOR EACH ROW
+EXECUTE FUNCTION update_timestamp();
+
+CREATE OR REPLACE FUNCTION validate_review_rating()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.rating < 0 OR NEW.rating > 5 THEN
+    RAISE EXCEPTION 'Rating must be between 0 and 5';
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validate_review_rating
+BEFORE INSERT OR UPDATE ON reviews
+FOR EACH ROW
+EXECUTE FUNCTION validate_review_rating();
+
+CREATE OR REPLACE FUNCTION check_stock_before_order()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT stock FROM watchers WHERE watcher_id = NEW.watcher_id) < NEW.quantity THEN
+    RAISE EXCEPTION 'Not enough stock for product ID %', NEW.watcher_id;
+  END IF;
+
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_check_stock
+BEFORE INSERT ON order_items
+FOR EACH ROW
+EXECUTE FUNCTION check_stock_before_order();
+
 
 INSERT INTO users (name, surname, email, address, phone, password, role)
 VALUES
 ('Іван', 'Іванов', 'ivan@example.com', 'вул. Центральна, 1', '0987654321', 'password123', 'user'),
 ('Марія', 'Петренко', 'maria@example.com', 'вул. Шевченка, 2', '0976543210', 'password123', 'user'),
 ('Олександр', 'Сидоров', 'alexander@example.com', 'вул. Лесі Українки, 3', '0965432109', 'admin123', 'admin');
-
 
 INSERT INTO watchers (product_name, price, description, material, rating, rating_count, discount, brand, stock, image_url) VALUES
 ('SYXS158', 3200.00, 'Класичний наручний годинник із нержавіючої сталі. Легкий і стильний дизайн.', 'Нержавіюча сталь', 0, 0, 0, 'Swatch', 25, 'https://swatch.ua/media/catalog/product/cache/2/thumbnail/301x217/9df78eab33525d08d6e5fb8d27136e95/s/y/syxs158.jpg'),
@@ -159,45 +208,41 @@ INSERT INTO watchers (product_name, price, description, material, rating, rating
 ('Irony Medium', 3209.99, 'Елегантний годинник середнього розміру', 'Алюміній', 0, 0, 0, 'Swatch', 10, 'https://swatch.ua/media/menu/irony_medium_SS20.jpg'),
 ('Irony Lady', 3109.99, 'Вишуканий жіночий годинник', 'Алюміній', 0, 0, 0, 'Swatch', 18, 'https://swatch.ua/media/menu/irony_lady-FW18_4.jpg');
 
-
-select * from reviews;
-
 DO $$
 DECLARE
     v_watcher_id INT;
     v_user_id INT;
     v_order_id INT;
     v_order_item_id INT;
-    v_rating NUMERIC;
+    v_rating DECIMAL;
 BEGIN
-    -- Ітерація по годинниках
     FOR v_watcher_id IN 22..51 LOOP
-        -- Ітерація по користувачах
         FOR v_user_id IN 7..16 LOOP
-            -- Створення замовлення для користувача
+            -- Створення замовлення
             INSERT INTO orders (user_id, payment_method, shipping_status)
             VALUES (v_user_id, 'credit_card', 'completed')
             RETURNING order_id INTO v_order_id;
 
-            -- Додавання товару до замовлення
+            -- Додавання товару
             INSERT INTO order_items (order_id, quantity, price, watcher_id)
-            VALUES (v_order_id, 1, (SELECT price FROM watchers WHERE watcher_id = v_watcher_id), v_watcher_id)
+            VALUES (
+                v_order_id,
+                1,
+                (SELECT price FROM watchers WHERE watcher_id = v_watcher_id),
+                v_watcher_id
+            )
             RETURNING order_item_id INTO v_order_item_id;
 
-            -- Генерація рейтингу (1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5)
-            -- Вибір випадкового рейтингу з можливих значень
+            -- Генерація випадкового рейтингу
             v_rating := (ARRAY[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5])[FLOOR(1 + random() * 9)::INT];
 
             -- Додавання відгуку
             INSERT INTO reviews (rating, review_text, order_item_id)
             VALUES (
-                v_rating,  -- Випадковий рейтинг
-                'This is a review for watcher ' || v_watcher_id || ' by user ' || v_user_id || '.', -- Текст відгуку
+                v_rating,
+                'This is a review for watcher ' || v_watcher_id || ' by user ' || v_user_id || '.',
                 v_order_item_id
             );
         END LOOP;
     END LOOP;
 END $$;
-
-
-TRUNCATE TABLE reviews, order_items, orders RESTART IDENTITY CASCADE;

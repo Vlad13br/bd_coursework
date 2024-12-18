@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
-import {useParams, useNavigate, Link} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import  AuthContext  from '../components/AuthProvider'
 import '../styles/watcher.css';
 
@@ -24,7 +24,6 @@ const WatcherPage = () => {
         image_url: ""
     });
 
-    const history = useNavigate();
 
     useEffect(() => {
         const fetchWatcherData = async () => {
@@ -111,20 +110,6 @@ const WatcherPage = () => {
 
         setIsAdded(true);
         setTimeout(() => setIsAdded(false), 2000);
-    };
-
-    const handleDeleteWatcher = async () => {
-        const confirmDelete = window.confirm("Ви впевнені, що хочете видалити цей товар?");
-
-        if (!confirmDelete) {
-            return;
-        }
-        try {
-            await axios.delete(`http://localhost:3001/api/watchers/${watcher_id}`, { withCredentials: true });
-            history("/");
-        } catch (err) {
-            setError('Не вдалося видалити товар');
-        }
     };
 
     if (loading) {
@@ -268,9 +253,6 @@ const WatcherPage = () => {
                             <button type="submit">Оновити знижку</button>
                         </form>
 
-                        <button onClick={handleDeleteWatcher} className="delete-button">
-                            Видалити товар
-                        </button>
                     </>
                 )}
 
@@ -281,7 +263,7 @@ const WatcherPage = () => {
                         </button>
                     </>
                 )}
-                {isAdded && <div className="cart-notification">Товар додано в кошик!(кошик в фрофілі)</div>}
+                {isAdded && <div className="cart-notification">Товар додано в кошик!(кошик в в профілі)</div>}
             </div>
 
             <div className="reviews-section">
