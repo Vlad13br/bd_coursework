@@ -197,6 +197,8 @@ const HomePage = () => {
                                     <img
                                         src={watch.image_url}
                                         className="album-cover"
+                                        alt="Watcher page"
+                                        loading="lazy"
                                     />
                                     <div className="price-info">
                                         {discount > 0 ? (

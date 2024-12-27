@@ -141,19 +141,63 @@ class StatsController {
                 return res.status(400).json({ error: 'Invalid status' });
             }
 
-            const query = `
-      UPDATE orders 
-      SET shipping_status = $1 
-      WHERE order_id = $2
-      RETURNING *;
-    `;
-            const result = await pool.query(query, [new_status, order_id]);
+            const queryUpdateOrder = `
+            UPDATE orders 
+            SET shipping_status = $1 
+            WHERE order_id = $2
+            RETURNING *;
+        `;
+            const resultOrder = await pool.query(queryUpdateOrder, [new_status, order_id]);
 
-            if (result.rows.length === 0) {
+            if (resultOrder.rows.length === 0) {
                 return res.status(404).json({ error: 'Order not found' });
             }
 
-            res.status(200).json({ message: 'Order status updated', order: result.rows[0] });
+            if (new_status === 'completed') {
+                const queryOrderItems = `
+                SELECT watcher_id, quantity 
+                FROM order_items 
+                WHERE order_id = $1;
+            `;
+                const resultOrderItems = await pool.query(queryOrderItems, [order_id]);
+
+                for (const item of resultOrderItems.rows) {
+                    // Отримуємо поточний stock товару
+                    const queryGetStock = `
+                    SELECT stock 
+                    FROM watchers 
+                    WHERE watcher_id = $1;
+                `;
+                    const resultStockBefore = await pool.query(queryGetStock, [item.watcher_id]);
+                    const stockBefore = resultStockBefore.rows[0]?.stock;
+
+                    const queryUpdateStock = `
+                    UPDATE watchers 
+                    SET stock = stock - $1 
+                    WHERE watcher_id = $2 AND stock >= $1
+                    RETURNING stock;
+                `;
+                    const resultStockAfter = await pool.query(queryUpdateStock, [item.quantity, item.watcher_id]);
+
+                    if (resultStockAfter.rowCount === 0) {
+                        return res.status(400).json({
+                            error: `Insufficient stock for watcher_id: ${item.watcher_id}`
+                        });
+                    }
+
+                    const stockAfter = resultStockAfter.rows[0]?.stock;
+
+                    console.log(`Watcher ID: ${item.watcher_id}`);
+                    console.log(`Stock before: ${stockBefore}`);
+                    console.log(`Stock after: ${stockAfter}`);
+                    console.log(`Quantity purchased: ${item.quantity}`);
+                }
+            }
+
+            res.status(200).json({
+                message: 'Order status updated',
+                order: resultOrder.rows[0]
+            });
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Server error' });

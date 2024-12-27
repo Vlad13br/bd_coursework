@@ -50,6 +50,7 @@ CREATE TABLE reviews (
     order_item_id INT REFERENCES order_items(order_item_id)
 );
 
+
 CREATE OR REPLACE FUNCTION update_watcher_rating()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -61,11 +62,7 @@ BEGIN
       SELECT ROUND(AVG(r.rating), 2)
       FROM reviews r
       JOIN order_items oi ON r.order_item_id = oi.order_item_id
-      WHERE oi.watcher_id = (  -- Отримуємо watcher_id для відповідного order_item_id
-        SELECT watcher_id
-        FROM order_items
-        WHERE order_item_id = NEW.order_item_id  -- Визначаємо watcher_id для поточного запису
-      )
+      WHERE oi.watcher_id = NEW.watcher_id  -- Використовуємо NEW.watcher_id, отримане з поточного запису
     ), 0),
 
     -- Оновлюємо кількість відгуків для спостерігача , якщо їх немає ставимо 0
@@ -73,24 +70,18 @@ BEGIN
       SELECT COUNT(r.rating)
       FROM reviews r
       JOIN order_items oi ON r.order_item_id = oi.order_item_id
-      WHERE oi.watcher_id = (  -- Отримуємо watcher_id для відповідного order_item_id
-        SELECT watcher_id
-        FROM order_items
-        WHERE order_item_id = NEW.order_item_id  -- Визначаємо watcher_id для поточного запису
-      )
+      WHERE oi.watcher_id = NEW.watcher_id  -- Використовуємо NEW.watcher_id
     ), 0)
 
   -- Оновлюємо записи в таблиці watchers для правильного watcher_id
-  WHERE watcher_id = (
-    SELECT watcher_id
-    FROM order_items
-    WHERE order_item_id = NEW.order_item_id  -- Використовуємо order_item_id, який міститься у NEW
-  );
+  WHERE watcher_id = NEW.watcher_id;  -- Оновлюємо за допомогою NEW.watcher_id
 
   -- Повертаємо новий запис після виконання оновлення
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+-- NEW містить значення для рядка, який тільки що був вставлений у таблицю чи нові значення після оновлення.
 
 CREATE TRIGGER after_review_insert
 AFTER INSERT ON reviews

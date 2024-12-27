@@ -1,55 +1,63 @@
 .watcher-page-container {
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 30px;
     background-color: #f4f4f9;
     opacity: 0;
-    animation: fadeIn 0.5s forwards;
+    animation: fadeIn 0.6s ease-out forwards;
 }
 
 .watcher-info-box {
     border: 2px solid #ddd;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     margin-bottom: 40px;
     max-width: 900px;
     width: 100%;
     margin: 0 auto;
-    transform: translateY(-20px);
+    transform: translateY(-25px);
     opacity: 0;
-    animation: slideInUp 0.5s forwards;
+    animation: slideInUp 0.6s ease-out forwards;
 }
 
 .watcher-info-box h1 {
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: bold;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
     color: #333;
+    transition: color 0.3s ease;
+}
+
+.watcher-info-box h1:hover {
+    color: #5bc0de;
 }
 
 .watcher-info-box p {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    line-height: 1.5;
+    color: #555;
 }
 
 .watcher-info-box .price {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: bold;
     color: #333;
-    margin-top: 15px;
+    margin-top: 18px;
 }
 
 .watcher-info-box .original-price {
     text-decoration: line-through;
-    margin-right: 10px;
+    margin-right: 12px;
     color: #888;
 }
 
 .watcher-info-box .discounted-price {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: #d9534f;
+    font-weight: 600;
 }
 
 .watcher-image {
@@ -58,21 +66,21 @@
     margin-top: 20px;
     border-radius: 8px;
     opacity: 0;
-    animation: fadeIn 0.5s 0.25s forwards;
+    animation: fadeIn 0.6s 0.3s ease-out forwards;
 }
 
 button {
-    padding: 10px 20px;
-    margin: 10px 0;
+    padding: 12px 22px;
+    margin: 12px 0;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     background-color: #5bc0de;
     color: #fff;
-    font-size: 1rem;
+    font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
     opacity: 0;
-    animation: fadeIn 0.5s 0.5s forwards;
+    animation: fadeIn 0.6s 0.6s ease-out forwards;
 }
 
 button:hover {
@@ -91,16 +99,16 @@ button:hover {
 .edit-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
     opacity: 0;
-    animation: fadeIn 0.5s 0.75s forwards;
+    animation: fadeIn 0.6s 0.75s ease-out forwards;
 }
 
 .edit-form input {
-    padding: 10px;
-    font-size: 1rem;
+    padding: 12px;
+    font-size: 1.1rem;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 6px;
     width: 100%;
 }
 
@@ -112,20 +120,21 @@ button:hover {
 .update-discount-form {
     display: flex;
     justify-content: flex-start;
-    gap: 10px;
+    gap: 12px;
 }
 
 .update-discount-form input {
-    padding: 10px;
-    font-size: 1rem;
+    padding: 12px;
+    font-size: 1.1rem;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 6px;
     width: 200px;
 }
 
 .update-discount-form button {
-    padding: 10px 15px;
+    padding: 12px 18px;
     background-color: #5bc0de;
+    border-radius: 6px;
 }
 
 .update-discount-form button:hover {
@@ -133,17 +142,17 @@ button:hover {
 }
 
 .reviews-section {
-    margin-top: 40px;
+    margin-top: 50px;
     max-width: 900px;
     width: 100%;
     margin: 0 auto;
     opacity: 0;
-    animation: fadeIn 0.5s 1s forwards;
+    animation: fadeIn 0.6s 1s ease-out forwards;
 }
 
 .reviews-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
     color: #333;
 }
 
@@ -154,16 +163,17 @@ button:hover {
 
 .review-card {
     background-color: #f9f9f9;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 18px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     opacity: 0;
-    animation: fadeIn 0.5s forwards;
+    animation: fadeIn 0.6s ease-out forwards;
 }
 
 .review-card p {
-    margin: 5px 0;
+    margin: 8px 0;
+    color: #555;
 }
 
 .review-card strong {
@@ -174,13 +184,13 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 1.1rem;
-    margin-bottom: 10px;
+    font-size: 1.2rem;
+    margin-bottom: 12px;
 }
 
 .review-date-rating {
     font-size: 1rem;
-    color: #666;
+    color: #888;
 }
 
 @keyframes fadeIn {
@@ -194,7 +204,7 @@ button:hover {
 
 @keyframes slideInUp {
     from {
-        transform: translateY(-20px);
+        transform: translateY(-30px);
         opacity: 0;
     }
     to {
@@ -226,8 +236,9 @@ button:hover {
     background-color: #ff7a00;
     color: #fff;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 24px;
     cursor: pointer;
+    border-radius: 6px;
     transition: transform 0.2s ease-in-out;
 }
 
@@ -241,8 +252,8 @@ button:hover {
     right: 20px;
     background-color: #4caf50;
     color: white;
-    padding: 15px 20px;
-    border-radius: 5px;
+    padding: 18px 24px;
+    border-radius: 6px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     animation: fadeInOut 3s ease-in-out forwards;
     z-index: 1000;

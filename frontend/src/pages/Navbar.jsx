@@ -8,7 +8,6 @@ const Navbar = () => {
     const { auth, setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
 
-
     const handleLogout = async () => {
         try {
             await axios.post(
@@ -17,13 +16,12 @@ const Navbar = () => {
                 { withCredentials: true }
             );
 
-            // Очищення стану автентифікації
             setAuth({});
+            sessionStorage.removeItem("auth");
 
-            // Перенаправлення на головну сторінку
             navigate("/", { replace: true });
         } catch (err) {
-            console.error("Error during logout:", err);
+            console.error("Error during logout:", err.response?.data || err.message);
         }
     };
 

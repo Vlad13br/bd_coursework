@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect, useRef } from "react";
 import axios from "axios";
 
 const AuthContext = createContext({});
@@ -9,8 +9,21 @@ export const AuthProvider = ({ children }) => {
         return storedAuth ? JSON.parse(storedAuth) : {};
     });
 
+    const isUpdating = useRef(false);
+
+    const saveAuthToSession = (authData) => {
+        if (Object.keys(authData).length > 0) {
+            sessionStorage.setItem("auth", JSON.stringify(authData));
+        } else {
+            sessionStorage.removeItem("auth");
+        }
+    };
 
     const updateAuthStatus = async () => {
+        console.log('Render')
+        if (isUpdating.current) return;
+        isUpdating.current = true;
+
         try {
             const response = await axios.get('http://localhost:3001/api/session', { withCredentials: true });
             if (response.data.user) {
@@ -20,19 +33,17 @@ export const AuthProvider = ({ children }) => {
             }
         } catch (err) {
             setAuth({});
+        } finally {
+            isUpdating.current = false;
         }
     };
 
     useEffect(() => {
-        updateAuthStatus(); // Перевіряємо статус авторизації при завантаженні
+        updateAuthStatus();
     }, []);
 
     useEffect(() => {
-        if (Object.keys(auth).length > 0) {
-            sessionStorage.setItem("auth", JSON.stringify(auth)); // Зберігаємо інформацію про користувача в sessionStorage
-        } else {
-            sessionStorage.removeItem("auth"); // Якщо користувач вийшов з системи, видаляємо збережені дані
-        }
+        saveAuthToSession(auth);
     }, [auth]);
 
     return (

@@ -1,20 +1,24 @@
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7fc;
+    margin: 0;
+    padding: 0;
 }
+
 .page-container {
     display: flex;
     flex-wrap: nowrap;
     margin: 20px;
 }
+
 .filters-panel {
     width: 250px;
-margin-top: 80px;
-    margin-bottom: 50px;
+    margin-top: 80px;
+    margin-bottom: 55px;
     padding: 20px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     margin-right: 20px;
     display: flex;
     flex-direction: column;
@@ -63,10 +67,9 @@ margin-top: 80px;
     padding: 10px 15px;
     font-size: 1rem;
     border: none;
-    border-radius: 5px;
+    border-radius: 12px;
     cursor: pointer;
-    text-transform: uppercase;
-    font-weight: bold;
+    font-weight: normal;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
@@ -76,8 +79,8 @@ margin-top: 80px;
 }
 
 .apply-button:hover {
-    background-color: #218838;
-    transform: translateY(-3px);
+    background-color: #28a745;
+    transform: translateY(-5px);
 }
 
 .reset-button {
@@ -87,7 +90,7 @@ margin-top: 80px;
 
 .reset-button:hover {
     background-color: #c82333;
-    transform: translateY(-3px);
+    transform: translateY(-5px);
 }
 
 .content {
@@ -106,16 +109,18 @@ margin-top: 80px;
 @keyframes fadeIn {
     0% {
         opacity: 0;
+        transform: translateY(10px);
     }
     100% {
         opacity: 1;
+        transform: translateY(0);
     }
 }
 
 .album-list {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    gap: 20px;
     opacity: 0;
     animation: fadeIn 0.5s forwards 0.5s;
 }
@@ -123,31 +128,32 @@ margin-top: 80px;
 .album-card {
     background-color: #fff;
     border: 1px solid #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
     text-decoration: none;
     color: inherit;
-    padding: 15px;
+    padding: 20px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    min-width: 125px;
     opacity: 0;
     animation: fadeIn 0.5s forwards 0.7s;
 }
 
 .album-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .album-cover {
     max-width: 100%;
     height: auto;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    transition: transform 0.3s ease;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    transition: transform 0.3s ease-in-out;
 }
 
 .album-card:hover .album-cover {
@@ -196,6 +202,14 @@ margin-top: 80px;
     .album-list {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    .filters-panel {
+        width: 100%;
+    }
+
+    .page-container {
+        flex-wrap: wrap;
+    }
 }
 
 @media (max-width: 480px) {
@@ -205,11 +219,7 @@ margin-top: 80px;
 
     .filters-panel {
         width: 100%;
-        margin-bottom: 20px;
-    }
-
-    .page-container {
-        flex-wrap: wrap;
+        margin-bottom: 10px;
     }
 }
 
@@ -220,15 +230,23 @@ margin-top: 80px;
 }
 
 .page-button {
+    padding: 8px 16px;
     margin: 0 5px;
-    padding: 5px 10px;
-    cursor: pointer;
+    font-size: 1rem;
+    border-radius: 50px;
+    transition: background-color 0.3s ease;
+    color: #333;
+    border: 1px solid #ddd;
 }
 
 .page-button.active {
     background-color: #007bff;
     color: white;
-    font-weight: bold;
+}
+
+.page-button:hover {
+    background-color: #0056b3;
+    color: white;
 }
 
 .page-button:disabled {
