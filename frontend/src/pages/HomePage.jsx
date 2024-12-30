@@ -1,6 +1,8 @@
-import React, {useEffect, useState, useMemo, useCallback} from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import axios from 'axios';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Filters from '../components/Filters';
+import WatchesList from '../components/WatchesList'
 import '../styles/homePage.css';
 
 const HomePage = () => {
@@ -92,7 +94,6 @@ const HomePage = () => {
         }
     }, [filters, pendingFilters, navigate]);
 
-
     const resetFilters = () => {
         const initialFilters = {
             sort: 'rating',
@@ -114,7 +115,6 @@ const HomePage = () => {
         }
     };
 
-
     const handlePageChange = useCallback((page) => {
         setCurrentPage(page);
         const searchParams = new URLSearchParams(location.search);
@@ -132,95 +132,17 @@ const HomePage = () => {
 
     return (
         <div className="page-container">
-            <aside className="filters-panel">
-                <h2>Фільтри</h2>
-                <input
-                    type="number"
-                    placeholder="Мін. ціна"
-                    className="filters-panel-input"
-                    value={pendingFilters.minPrice}
-                    onChange={(e) => handlePendingFilterChange('minPrice', e.target.value)}
-                />
-                <input
-                    type="number"
-                    placeholder="Макс. ціна"
-                    className="filters-panel-input"
-                    value={pendingFilters.maxPrice}
-                    onChange={(e) => handlePendingFilterChange('maxPrice', e.target.value)}
-                />
-                <select
-                    className="filters-panel-select"
-                    value={pendingFilters.rating}
-                    onChange={(e) => handlePendingFilterChange('rating', e.target.value)}
-                >
-                    <option value="">Рейтинг 0+</option>
-                    <option value="3">3+ зірки</option>
-                    <option value="4">4+ зірки</option>
-                </select>
-                <label>
-                    <input
-                        type="checkbox"
-                        className="discounted-input"
-                        checked={pendingFilters.discounted}
-                        onChange={(e) => handlePendingFilterChange('discounted', e.target.checked)}
-                    />
-                    Тільки зі знижками
-                </label>
-                <select
-                    className="filters-panel-select"
-                    value={pendingFilters.sort}
-                    onChange={(e) => handlePendingFilterChange('sort', e.target.value)}
-                >
-                    <option value="rating">Рейтинг</option>
-                    <option value="price_asc">Ціна (зростання)</option>
-                    <option value="price_desc">Ціна (спадання)</option>
-                </select>
-                <button onClick={applyFilters} className="apply-button">Застосувати фільтри</button>
-                <button onClick={resetFilters} className="reset-button">Скинути фільтри</button>
-            </aside>
+            <Filters
+                filters={filters}
+                pendingFilters={pendingFilters}
+                handlePendingFilterChange={handlePendingFilterChange}
+                applyFilters={applyFilters}
+                resetFilters={resetFilters}
+            />
 
             <main className="content">
                 <h1 className="album-title">Годинники</h1>
-                {watches.length === 0 ? (
-                    <p>Годинники не знайдені.</p>
-                ) : (
-                    <div className="album-list">
-                        {watches.map((watch) => {
-                            const discount = parseFloat(watch.discount);
-                            const price = parseFloat(watch.price);
-                            const finalPrice = price * (1 - discount / 100);
-
-                            return (
-                                <Link key={watch.watcher_id} to={`/watchers/${watch.watcher_id}`}
-                                      className="album-card">
-                                    <h2>{watch.product_name}</h2>
-                                    <img
-                                        src={watch.image_url}
-                                        className="album-cover"
-                                        alt="Watcher page"
-                                        loading="lazy"
-                                    />
-                                    <div className="price-info">
-                                        {discount > 0 ? (
-                                            <p className="discounted-price">
-                                                Ціна: <span
-                                                className="original-price">{price} грн</span> {finalPrice.toFixed(2)} грн
-                                            </p>
-                                        ) : (
-                                            <p className="price">Ціна: {price} грн</p>
-                                        )}
-                                        <p className="description">{watch.description}</p>
-                                        {watch.rating_count > 0 && (
-                                            <div className="rating">
-                                                <span>Рейтинг: {watch.rating} зірок</span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </Link>
-                            );
-                        })}
-                    </div>
-                )}
+                <WatchesList watches={watches} />
                 <div className="pagination">
                     {Array.from({ length: totalPages }, (_, index) => (
                         <button

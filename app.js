@@ -5,6 +5,7 @@ const router = require("./routes/auth-router");
 const watcherRouter = require("./routes/watcher-router");
 const profileRouter = require("./routes/profile-router");
 const adminRouter = require('./routes/stats-router')
+const reviewsRouter = require('./routes/reviews-router')
 const PORT = process.env.PORT || 3001;
 
 const app = express();
@@ -32,5 +33,6 @@ app.use("/api", router);
 app.use("/api", watcherRouter)
 app.use("/api", profileRouter)
 app.use("/api", adminRouter)
+app.use('/api',reviewsRouter)
 
 app.listen(PORT, () => console.log(`Server running on port: ${PORT}`));
