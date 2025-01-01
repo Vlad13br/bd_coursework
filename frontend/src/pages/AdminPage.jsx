@@ -3,6 +3,7 @@ import axios from "axios";
 import '../styles/admin.css';
 import {Link} from "react-router-dom";
 import AuthContext from "../components/AuthProvider";
+import TopProductsChart from "../components/TopProductsChart";
 
 const AdminPage = () => {
     const { auth } = useContext(AuthContext);
@@ -260,29 +261,8 @@ const AdminPage = () => {
 
             {activeTable === 'topProducts' && (
                 <div>
-                    <h2 className='centered'>Top Selling Products</h2>
-                    <div className="scrollable-table">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th onClick={() => handleSort('product_name')}>Product
-                                    Name {sortConfig.key === 'product_name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-                                <th onClick={() => handleSort('total_sold')}>Total sold
-                                    {sortConfig.key === 'total_sold' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-                                <th onClick={() => handleSort('total_revenue')}>Total
-                                    Revenue {sortConfig.key === 'total_revenue' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {sortData(topProducts).map((product) => (
-                                <tr key={product.watcher_id}>
-                                    <td>{product.product_name}</td>
-                                    <td>{product.total_sold}</td>
-                                    <td>{product.total_revenue}</td>
-                                </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                    <div className="chart-container">
+                        <TopProductsChart topProducts={sortData(topProducts)}/>
                     </div>
                 </div>
             )}
