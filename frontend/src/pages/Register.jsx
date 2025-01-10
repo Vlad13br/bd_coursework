@@ -75,7 +75,8 @@ const Register = () => {
             if (!err?.response) {
                 setErrMsg('No response from server');
             } else if (err.response?.status === 400) {
-                setErrMsg('Invalid data, please check your input');
+                const errors = err.response.data.errors;
+                setErrMsg(errors.join(', '));
             } else if (err.response?.status === 409) {
                 setErrMsg('User with this email already exists');
             } else {

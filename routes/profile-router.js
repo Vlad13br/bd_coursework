@@ -3,7 +3,6 @@ const router = express.Router();
 const UserController = require("../controllers/profile-controller");
 const { isAuthenticated} = require("../middlewares/auth");
 
-
 router.get("/profile/:id",isAuthenticated, UserController.getUserInfoAndOrders);
 
 router.put(

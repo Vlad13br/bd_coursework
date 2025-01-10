@@ -70,7 +70,7 @@ const ProfilePage = () => {
                 { withCredentials: true }
         );
             setUserData(response.data.data);
-            setIsEditing(false); // Вийти з режиму редагування
+            setIsEditing(false);
         } catch (err) {
             setError("Не вдалося оновити профіль");
             console.error(err);

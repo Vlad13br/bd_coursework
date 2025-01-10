@@ -235,3 +235,14 @@
         transform: translateX(0);
     }
 }
+
+.input-error {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+}
+
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 0.2rem;
+}
