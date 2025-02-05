@@ -1,35 +1,22 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import axios from "axios";
 import AuthContext from "../components/AuthProvider";
-import  '../styles/profile.css'
-import Cart from '../components/Cart'
+import "../styles/profile.css";
+import Cart from "../components/Cart";
 
-const ProfilePage = () => {
-    const { auth } = useContext(AuthContext);
+const useUserProfile = (userId) => {
     const [userData, setUserData] = useState(null);
-    const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editedData, setEditedData] = useState({
-        name: "",
-        surname: "",
-        email: "",
-        address: "",
-        phone: "",
-    });
 
     useEffect(() => {
         const fetchUserInfo = async () => {
-            if (!auth || !auth.user_id) return;
-
             try {
                 const response = await axios.get(
-                   ` http://localhost:3001/api/profile/${auth.user_id}`,
-                { withCredentials: true }
-            );
+                    `http://localhost:3001/api/profile/${userId}`,
+                    { withCredentials: true }
+                );
                 setUserData(response.data.data.user);
-                setOrders(response.data.data.orders);
             } catch (err) {
                 setError("Не вдалося завантажити дані профілю");
                 console.error(err);
@@ -38,8 +25,51 @@ const ProfilePage = () => {
             }
         };
 
-        fetchUserInfo();
-    }, [auth]);
+        if (userId) fetchUserInfo();
+    }, [userId]);
+
+    return { userData, loading, error };
+};
+
+const useUserOrders = (userId) => {
+    const [orders, setOrders] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchOrders = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:3001/api/orders/${userId}`,
+                    { withCredentials: true }
+                );
+                setOrders(response.data.data.orders);
+            } catch (err) {
+                setError("Не вдалося завантажити замовлення");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        if (userId) fetchOrders();
+    }, [userId]);
+
+    return { orders, loading, error };
+};
+
+const ProfilePage = () => {
+    const { auth } = useContext(AuthContext);
+    const { userData, loading: userLoading, error: userError } = useUserProfile(auth.user_id);
+    const { orders, loading: ordersLoading, error: ordersError } = useUserOrders(auth.user_id);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editedData, setEditedData] = useState({
+        name: "",
+        surname: "",
+        email: "",
+        address: "",
+        phone: "",
+    });
 
     const handleEditClick = () => {
         setIsEditing(true);
@@ -62,17 +92,14 @@ const ProfilePage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await axios.put(
                 `http://localhost:3001/api/profile/${auth.user_id}`,
-            editedData,
+                editedData,
                 { withCredentials: true }
-        );
-            setUserData(response.data.data);
+            );
             setIsEditing(false);
         } catch (err) {
-            setError("Не вдалося оновити профіль");
             console.error(err);
         }
     };
@@ -81,8 +108,8 @@ const ProfilePage = () => {
         setIsEditing(false);
     };
 
-    if (loading) return <p>Завантаження...</p>;
-    if (error) return <p>{error}</p>;
+    if (userLoading || ordersLoading) return <p>Завантаження...</p>;
+    if (userError || ordersError) return <p>{userError || ordersError}</p>;
 
     return (
         <div className="profile-container">
@@ -214,4 +241,5 @@ const ProfilePage = () => {
         </div>
     );
 };
-export  default  ProfilePage;
+
+export default ProfilePage;
