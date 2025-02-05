@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styles from '../styles/auth.module.css';
-import AuthContext from '../components/AuthProvider'
+import AuthContext from '../components/AuthProvider';
 
 const Login = () => {
     const { setAuth } = useContext(AuthContext);
@@ -13,15 +13,27 @@ const Login = () => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [errMsg, setErrMsg] = useState('');
+    const [error, setError] = useState('');
 
     useEffect(() => {
         emailRef.current.focus();
     }, []);
 
     useEffect(() => {
-        setErrMsg('');
+        setError('');
     }, [email, password]);
+
+    const handleError = (err) => {
+        if (!err?.response) {
+            return 'No Server Response';
+        } else if (err.response?.status === 400) {
+            return 'Missing Email or Password';
+        } else if (err.response?.status === 401) {
+            return 'Unauthorized';
+        } else {
+            return 'Login Failed';
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,31 +52,22 @@ const Login = () => {
 
             if (user) {
                 setAuth(user);
-
                 setEmail('');
                 setPassword('');
-
                 navigate("/");
             } else {
-                setErrMsg('No user data received');
+                setError('No user data received');
             }
         } catch (err) {
-            if (!err?.response) {
-                setErrMsg('No Server Response');
-            } else if (err.response?.status === 400) {
-                setErrMsg('Missing Email or Password');
-            } else if (err.response?.status === 401) {
-                setErrMsg('Unauthorized');
-            } else {
-                setErrMsg('Login Failed');
-            }
+            const errorMessage = handleError(err);
+            setError(errorMessage);
             errRef.current.focus();
         }
     };
 
     return (
         <section className={styles.section}>
-            <p ref={errRef} className={errMsg ? styles.errmsg : styles.offscreen} aria-live="assertive">{errMsg}</p>
+            <p ref={errRef} className={error ? styles.errmsg : styles.offscreen} aria-live="assertive">{error}</p>
             <h1 className={styles.h1}>Sign In</h1>
             <form onSubmit={handleSubmit}>
                 <label htmlFor="email">Email:</label>
